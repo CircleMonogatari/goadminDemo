@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="../../static/css/style.css" rel="stylesheet" media="screen"/>
+</head>
+<body>
+<script src="//unpkg.com/vue/dist/vue.js"></script>
+<script src="//unpkg.com/element-ui@2.13.2/lib/index.js"></script>
+<div id="app">
+    <el-form ref="form" :model="form" label-width="80px">
+        <el-form-item label="证书ID">
+            <el-input v-model="form.id"></el-input>
+        </el-form-item>
+        <el-form-item label="证书名称">
+            <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="办件类型">
+            <el-select v-model="form.type" placeholder="请选证件类型">
+                <el-option label="伐木许可" value="伐木许可"></el-option>
+                <el-option label="开矿许可" value="开矿许可"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="申请时间">
+            <el-col :span="11">
+                <el-date-picker type="date" placeholder="选择日期" v-model="form.date"
+                                style="width: 100%;"></el-date-picker>
+            </el-col>
+        </el-form-item>
+        <el-form-item label="权力事项类型">
+            <el-switch v-model="form.mode"></el-switch>
+        </el-form-item>
+        <el-form-item label="权力来源">
+            <el-switch v-model="form.source"></el-switch>
+        </el-form-item>
+
+        <el-form-item label="受理机构">
+            <el-input v-model="form.acceptingAgency"></el-input>
+        </el-form-item>
+        <el-form-item label="联办机构">
+            <el-input v-model="form.jointAgency"></el-input>
+        </el-form-item>
+        <el-form-item label="责任处（科）室">
+            <el-input v-model="form.department"></el-input>
+        </el-form-item>
+
+
+        <el-row :gutter="20">
+            <el-col :span="6">
+                <el-form-item label="联系电话">
+                    <el-input v-model="form.phone"></el-input>
+                </el-form-item>
+            </el-col>
+            <el-col :span="6">
+                <el-form-item label="申请人">
+                    <el-input v-model="form.user"></el-input>
+                </el-form-item>
+            </el-col>
+
+        </el-row>
+
+
+        <el-form-item label="申请材料">
+            <el-switch v-model="form.user"></el-switch>
+        </el-form-item>
+        <el-form-item label="状态">
+            <el-switch v-model="form.status"></el-switch>
+        </el-form-item>
+        <el-form-item label="审批结果">
+            <el-switch v-model="form.user"></el-switch>
+        </el-form-item>
+
+
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">立即创建</el-button>
+            <el-button>取消</el-button>
+        </el-form-item>
+    </el-form>
+</div>
+
+
+<script>
+    var Main = {
+        data() {
+            return {
+                form: {
+                    id: '',
+                    name: '',
+                    type: '',
+                    mode: '行政许可',
+                    source: '',
+
+                    acceptingAgency: '',
+                    jointAgency: '',
+                    department: '',
+
+                    user: '',
+                    phone: '',
+
+
+                    status: '',
+
+                }
+            }
+        },
+        methods: {
+            onSubmit() {
+                console.log('submit!');
+            },
+
+            init() {
+
+            }
+        }
+    }
+    var Ctor = Vue.extend(Main)
+    new Ctor().$mount('#app')
+
+</script>
+</body>
+</html>

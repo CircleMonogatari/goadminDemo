@@ -1,0 +1,75 @@
+<html>
+<head>
+
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>
+</head>
+
+<body >
+<div id="app" class="verify" style="background-image: url('../../static/image/license.jpg');width: 500px;height: 694px;position: relative">
+    <div>AEF42635345323948743DE</div>
+    <div>asdsadsa</div>
+    <div>2020年6月15日10:14:52</div>
+    <div>BAE5234236342B23423A432</div>
+    <div class="ewm">
+        <img  style="height: 100px; width: auto;" src="../../static/image/ewm.png"/>
+    </div>
+</div>
+
+
+<script type = "text/javascript">
+    new Vue({
+        el: '#app',
+        data () {
+            return {
+                info: null
+            }
+        },
+        mounted () {
+            axios
+                .get('https://www.runoob.com/try/ajax/json_demo.json')
+                .then(response => (this.info = response))
+                .catch(function (error) { // 请求失败处理
+                    console.log(error);
+                });
+        }
+    })
+</script>
+
+</body>
+
+<style>
+    body{
+        margin: 0;
+        padding: 0;
+    }.verify div{
+         position: relative;
+         font-size: 10px;
+         width: 400px;
+         word-break: break-word;
+         text-align: center;
+         left: 50px;
+         line-height: 18px;
+         color: #a06c17;
+     }
+    .verify div:nth-child(1){
+        top: 270px;
+    }
+    .verify div:nth-child(2){
+        top: 320px;
+    }
+    .verify div:nth-child(3){
+        top: 370px;
+        font-size: 20px;
+    }
+    .verify div:nth-child(4){
+        top: 420px;
+        font-size: 20px;
+    }.verify div:nth-child(5){
+         top: 420px;
+        left: -70px;
+         font-size: 20px;
+     }
+</style>
+
+</html>

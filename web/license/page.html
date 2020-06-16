@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <!-- import CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link href="../../static/css/style.css" rel="stylesheet"  media="screen"/>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/css/main.css">
+    <script src="http://220.165.247.77/API/arcgis_js/4.15/init.js"></script>
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+</head>
+<body>
+<div id="app" style="position:absolute" >
+    <template>
+        <el-table
+                :data="tableData"
+                border
+                fit
+                style="width: 100%"
+                height="800">
+            <el-table-column
+                    fixed
+                    prop="id"
+                    label="证书编号"
+                    width="200">
+                <template slot-scope="scope"  >
+                    <a :href="'../../static/html/backimage.html?id=' + scope.row.id ">{{scope.row.id}}</a>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    fixed
+                    prop="name"
+                    label="证书名称"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    fixed
+                    prop="date"
+                    label="日期"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    fixed
+                    prop="user"
+                    label="持证人"
+                    width="150">
+            </el-table-column>
+
+            <el-table-column
+                    prop="range"
+                    label="许可范围"
+                    width="220">
+
+
+                <template slot-scope="scope"  >
+
+                    <el-button @click="drawer = true" type="primary" style="margin-left: 16px;">
+                        {{scope.row.landArea}}
+                    </el-button>
+                    <el-drawer
+                            title="我是标题"
+                            :visible.sync="drawer"
+                            :with-header="false">
+                        <iframe src="/static/html/test.html" frameborder="0" style="width: 100%;height: 100%"></iframe>
+                    </el-drawer>
+
+                </template>
+            </el-table-column>
+
+            <el-table-column
+                    prop="status"
+                    label="状态"
+                    width="120">
+            </el-table-column>
+
+
+        </el-table>
+    </template>
+</div>
+
+</body>
+
+<!-- import Vue before Element -->
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<!-- import JavaScript -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    let me
+    var Main = {
+        data() {
+            return {
+                drawer: false,
+                tableData: [{
+                    date: '2020-05-03',
+                    name: '林木采伐许可',
+                    user:'李佳琪',
+                    landArea:'昆明市附近',
+                    status: '已通过',
+                    id: 'AEF42635345323948743DE',
+                },{
+                    date: '2020-05-02',
+                    name: '林地经营使用许可',
+                    user:'王小虎',
+                    landArea:'宝山地区',
+                    status: '审批中',
+                    id: 'EA9239872834DE324234242',
+                },{
+                    date: '2020-05-02',
+                    name: '林地使用许可',
+                    user:'王小虎',
+                    landArea:'宝山地区',
+                    status: '未通过',
+                    id: '234323BAE34DE324234242',
+                }]
+            }
+        }
+    }
+    var Ctor = Vue.extend(Main)
+    new Ctor().$mount('#app')
+</script>
+</html>

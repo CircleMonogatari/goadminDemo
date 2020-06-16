@@ -1,0 +1,159 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>ArcGIS API for JavaScript Hello World App</title>
+  <link rel="stylesheet" href="/static/font-awesome-4.7.0/css/font-awesome.min.css">
+  <style>
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+     #homeBtn{
+       background: white;
+       color: #6e6e6e;
+       font-size: 20px;
+       padding: 6px 7px;
+     }
+    #homeBtn:hover{
+      background-color: #e0e0e0;
+      cursor: pointer;
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.15/"></script>
+
+  <script>
+    var me = {
+      pageData: {},
+      vars: {
+        esri: {
+          nld: {}
+        },
+      baseLocation: {
+        lat: 106.2633,
+        lot: 38.475,
+        zoom: 16
+      }
+      }
+    }
+    require(['esri/widgets/Sketch', 'esri/Map', 'esri/layers/GraphicsLayer', 'esri/views/MapView',
+              'esri/layers/WebTileLayer', 'esri/views/SceneView', 'esri/Basemap', 'esri/widgets/BasemapToggle',
+              'esri/Graphic', 'esri/symbols/PictureMarkerSymbol', 'esri/symbols/SimpleMarkerSymbol', 'esri/symbols/TextSymbol',
+              'esri/symbols/SimpleLineSymbol', 'esri/symbols/SimpleFillSymbol', 'esri/geometry/Point', 'esri/geometry/SpatialReference'],
+            function (Sketch, Map, GraphicsLayer, MapView, WebTileLayer, SceneView, Basemap, BasemapToggle, Graphic, PictureMarkerSymbol,
+                      SimpleMarkerSymbol, TextSymbol, SimpleLineSymbol, SimpleFillSymbol, Point, SpatialReference) {
+              const layer = new GraphicsLayer()
+              me.vars.esri = {
+                nld: {
+                  graphicLayer: layer
+                },
+                Graphic: Graphic,
+                SimpleMarkerSymbol: SimpleMarkerSymbol,
+                PictureMarkerSymbol: PictureMarkerSymbol,
+                TextSymbol: TextSymbol,
+                SimpleLineSymbol: SimpleLineSymbol,
+                SimpleFillSymbol: SimpleFillSymbol,
+                Point: Point,
+                SpatialReference: SpatialReference
+              }
+              // 采用天地图街道图和ArcGIS卫星图
+              const vecLayer = new WebTileLayer({
+                urlTemplate: 'http://{subDomain}.tianditu.gov.cn/vec_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX={level}&TILEROW={row}&TILECOL={col}&tk=b4d1ae862c1b4e399849af1a8008ca94',
+                subDomains: ['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7'],
+                copyright: '天地图矢量图'
+              })
+              const cvaLayer = new WebTileLayer({
+                urlTemplate: 'http://{subDomain}.tianditu.gov.cn/cva_w/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=w&FORMAT=tiles&TILEMATRIX={level}&TILEROW={row}&TILECOL={col}&tk=b4d1ae862c1b4e399849af1a8008ca94',
+                subDomains: ['t0', 't1', 't2', 't3', 't4', 't5', 't6', 't7'],
+                copyright: '天地图矢量注记'
+              })
+              const streetBasemap = new Basemap({
+                title: '矢量图',
+                thumbnailUrl: 'https://js.arcgis.com/4.7/esri/images/basemap/streets.jpg',
+                baseLayers: [vecLayer, cvaLayer],
+                id: 'street'
+              })
+              const map = new Map({
+                basemap: 'satellite',
+                layers: [layer]
+              })
+
+              const view = new MapView({
+                container: 'viewDiv',
+                map: map,
+                zoom: me.vars.baseLocation.zoom,
+                center: [me.vars.baseLocation.lat, me.vars.baseLocation.lot]
+              })
+              view.when(res => {
+
+              })
+              me.vars.esri.nld.view = view
+              /** 底图切换 */
+              const toggle = new BasemapToggle({
+                view: view,
+                nextBasemap: streetBasemap
+              })
+              view.ui.add(toggle, 'bottom-right')
+              view.ui.add(document.getElementById('homeBtn'), 'top-left')
+              /** 画图部件 */
+              const sketch = new Sketch({
+                layer: layer,
+                view: view,
+                // graphic will be selected as soon as it is created
+                creationMode: 'update'
+              })
+              sketch.on('create', evt => {
+                console.log(evt)
+              })
+              sketch.on('update', evt => {
+                console.log(evt)
+              })
+              view.ui.add(sketch, 'top-right')
+            })
+    // 加载数据初始化要素
+    function initGraphic () {
+      me.pageData.graphics.forEach(item => {
+        if (item.geometry.centroid) {
+          delete item.geometry.centroid
+        }
+        item.geometry.spatialReference = new me.vars.esri.SpatialReference({ wkid: 102100 })
+        if (item.geometry.type === 'polygon' && item.geometry.rings.length === 0) {} else {
+          let g = new me.vars.esri.Graphic(item)
+          me.vars.esri.nld.graphicLayer.add(g)
+        }
+      })
+    }
+    function toHome ()
+    {
+      let v = me.vars.esri.nld.view
+      v.goTo({
+        zoom: me.vars.baseLocation.zoom,
+        center: [me.vars.baseLocation.lat, me.vars.baseLocation.lot]
+      })
+    }
+    /**
+     * 根据ID查询
+     */
+    function getById () {
+      nld.doPost({
+        url: '/api-admin/map/config/baseGetById',
+        data: {
+          mapConfigId: 7
+        }
+      }, function (res) {
+        me.pageData = res.data.data
+        initGraphic()
+      })
+    }
+  </script>
+</head>
+<body>
+<div id="viewDiv">
+  <div class="fa fa-home" id="homeBtn" title="首页" onclick="toHome"></div>
+</div>
+</body>
+</html>
